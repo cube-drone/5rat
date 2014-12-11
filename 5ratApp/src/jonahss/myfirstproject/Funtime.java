@@ -2,10 +2,13 @@ package jonahss.myfirstproject;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+
+import java.io.File;
 
 public class Funtime extends Activity {
 
@@ -19,7 +22,7 @@ public class Funtime extends Activity {
 
         //new AsyncTaskEx().execute();
 
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nut2fair);
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File("/sdcard/5rat.mid")));
 
         //mediaPlayer = new MediaPlayer();
 

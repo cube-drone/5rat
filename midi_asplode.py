@@ -5,6 +5,8 @@ import midi
 import os
 import copy
 
+import adb
+
 def filter_unimportant_tracks(track_list):
     """
     Remove any tracks that do not contain a NoteOnEvent, 
@@ -74,41 +76,54 @@ def save_tracks(original_filename, new_filename, track_list):
                     pass
     midi.write_midifile(new_filename, pattern)
 
-def asplode(filename, div_number):
-    pattern = midi.read_midifile(filename)
-    
-    tracks = filter_unimportant_tracks(pattern)
-    #for track in tracks:
-    #    track.make_ticks_abs()
-    print len(tracks), "available tracks"
-
-    tracks = sorted(tracks, key=len)
-    tracks.reverse()
-
-    print div_number, "MIDI files"
-    track_split = deal_tracks(tracks, div_number)
-    
-    directory_name = filename[:-4]+"_split"
+def create_directory(directory_name):
     try:
         print "creating",
         os.mkdir( directory_name )
     except OSError:
         print directory_name, "already exists"
+
+def asplode(filename):
+    """
+    Divide the MIDI file at filename into N chunks, 
+    where N is the number of ADB devices available. 
+
+    Write each chunk to a new MIDI file, then send it to 
+    that ADB device. 
+    """
+
+    original_filename = filename
+    pattern = midi.read_midifile(original_filename)
+    devices = adb.Devices()
+    div_number = len(devices)
+    
+    tracks = filter_unimportant_tracks(pattern)
+    print len(tracks), "available tracks"
+
+    tracks = sorted(tracks, key=len)
+    tracks.reverse()
+
+    print div_number, "target devices"
+    track_split = deal_tracks(tracks, div_number)
+   
+    # Create Directory
+    directory_name = filename[:-4]+"_split"
+    create_directory(directory_name)
+
     for counter, track_group in enumerate(track_split):
-        group_filename = os.path.join( directory_name, str(counter)+".mid" ) 
-        print group_filename, "------"
+        new_filename = os.path.join( directory_name, str(counter)+".mid" ) 
+        print new_filename, "------"
         print_tracks(track_group)
-        save_tracks(filename, group_filename, track_group)
-        
+        save_tracks(original_filename, new_filename, track_group)
+        devices[counter].push_file(new_filename, "/mnt/sdcard/5rat.mid")        
 
 
 if __name__ == '__main__':
     import sys
     try:
         filename = sys.argv[1]
-        div_number = int(sys.argv[2])
     except IndexError:
-        print "Include a filename and a division-number, brigand"
+        print "Include a filename, brigand"
 
     print filename
-    asplode(filename, div_number)
+    asplode(filename)

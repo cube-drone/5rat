@@ -50,7 +50,7 @@ var nextPort = startPort;
 var args = "forward tcp:%p% tcp:" + nextPort;
 var ports = [];
 var sockets = [];
-exec("adb forward --remove-all");
+
 adb.getConnectedDevices(function(err, devices) {
 	if (err) {
 		console.log(err);

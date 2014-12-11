@@ -4,3 +4,4 @@ out/
 out/*
 /TestModule
 .idea
+node_modules

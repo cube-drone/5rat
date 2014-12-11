@@ -12,6 +12,7 @@ var startSock = function(port, len) {
     console.log("Connected on " + port);
     if (++promised == len == sockets.length) {
     	for(var i = 0; i < sockets.length; i++) {
+    		console.log("Sending " + template);
 			sockets[i].write(template);
 		}
     }
@@ -65,7 +66,7 @@ adb.getConnectedDevices(function(err, devices) {
 
 	    exec(arg, function(err, stdout, stderr){
 	      if (err) {	 console.log ('error for device:', device.udid, err); }
-		  startSock(tempPort, devices.length);
+		startSock(tempPort, devices.length);
 	    });
 	    i++;
 	    nextPort++

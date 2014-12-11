@@ -1,0 +1,8 @@
+#!/bin/bash
+
+python midi_asplode.py $1
+adb-foreach uninstall "jonahss.myfirstproject"
+adb-foreach install -r out/5ratApp.apk
+adb-foreach shell am start -n "jonahss.myfirstproject/.Funtime"
+node controller.js
+node controller.js

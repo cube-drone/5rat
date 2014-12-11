@@ -3,11 +3,18 @@ var exec = require('child_process').exec;
 var ADB = require('appium-adb');
 var adb = new ADB();
 
-var startSock = function(port) {
+
+var startSock = function(port, len) {
   var socket = net.connect(port, function () {
+  	sockets.push(socket);
+  	socket._port = port;
     socket.setEncoding('utf8');
     console.log("Connected on " + port);
-    socket.write(template);
+    if (++promised == len == sockets.length) {
+    	for(var i = 0; i < sockets.length; i++) {
+			sockets[i].write(template);
+		}
+    }
   });
 
   socket.on('error', function (err) {
@@ -15,7 +22,7 @@ var startSock = function(port) {
   });
 
   socket.on('close', function () {
-    console.dir("Closing " + port);
+    console.log("Closing " + socket._port);
   });
 
   socket.on('data', function(data) {
@@ -23,7 +30,6 @@ var startSock = function(port) {
   });
 
 }
-
 
 function sleep(time, callback) {
   var stop = new Date().getTime();
@@ -37,29 +43,31 @@ function sleep(time, callback) {
 
 var template = '{"action":"playSong", "cmd":"action"}';
 
-var args = "forward tcp:%p% tcp:4724";
+var promised = 0;
 var startPort = 4724;
-var ports = [startPort++, startPort++, startPort++, startPort++, startPort++];
-
+var nextPort = startPort;
+var args = "forward tcp:%p% tcp:" + nextPort;
+var ports = [];
+var sockets = [];
+exec("adb forward --remove-all");
 adb.getConnectedDevices(function(err, devices) {
 	if (err) {
 		console.log(err);
 		process.exit(1);
 	}
-  var i = 0;
+  	var i = 0;
 	devices.forEach(function(device) {
-    var arg = args.replace("%p%", ports[i]);
-    arg = "adb -s " + device.udid + " " + arg;
-    exec(arg, function(err, stdout, stderr){
-      if (err) {	 console.log ('error for device:', device.udid, err); }
-      console.log(device.udid, ':', stdout, stderr || '');
-    });
-    i++;
-	});
-});
+		ports[i] = nextPort;
+	    var arg = args.replace("%p%", ports[i]);
+	    arg = "adb -s " + device.udid + " " + arg;
+	    console.log("Running " + arg);
+	    var tempPort = ports[i];
 
-sleep(5000, function(){
-  ports.forEach(function(p){
-    startSock(p);
-  });
+	    exec(arg, function(err, stdout, stderr){
+	      if (err) {	 console.log ('error for device:', device.udid, err); }
+		  startSock(tempPort, devices.length);
+	    });
+	    i++;
+	    nextPort++
+	});
 });

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_myfirstproject" default="compile.module.myfirstproject">
+  <dirname property="module.myfirstproject.basedir" file="${ant.file.module_myfirstproject}"/>
+  
+  <property name="module.jdk.home.myfirstproject" value="${jdk.home.android_api_18_platform}"/>
+  <property name="module.jdk.bin.myfirstproject" value="${jdk.bin.android_api_18_platform}"/>
+  <property name="module.jdk.classpath.myfirstproject" value="jdk.classpath.android_api_18_platform"/>
+  
+  <property name="compiler.args.myfirstproject" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="myfirstproject.output.dir" value="${module.myfirstproject.basedir}/bin/classes"/>
+  <property name="myfirstproject.testoutput.dir" value="${module.myfirstproject.basedir}/bin/classes"/>
+  
+  <path id="myfirstproject.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="myfirstproject.module.production.classpath">
+    <path refid="${module.jdk.classpath.myfirstproject}"/>
+  </path>
+  
+  <path id="myfirstproject.runtime.production.module.classpath">
+    <pathelement location="${myfirstproject.output.dir}"/>
+  </path>
+  
+  <path id="myfirstproject.module.classpath">
+    <path refid="${module.jdk.classpath.myfirstproject}"/>
+    <pathelement location="${myfirstproject.output.dir}"/>
+  </path>
+  
+  <path id="myfirstproject.runtime.module.classpath">
+    <pathelement location="${myfirstproject.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.myfirstproject">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.myfirstproject">
+    <patternset refid="excluded.from.module.myfirstproject"/>
+  </patternset>
+  
+  <path id="myfirstproject.module.sourcepath">
+    <dirset dir="${module.myfirstproject.basedir}">
+      <include name="gen"/>
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.myfirstproject" depends="compile.module.myfirstproject.production,compile.module.myfirstproject.tests" description="Compile module MyFirstProject"/>
+  
+  <target name="compile.module.myfirstproject.production" depends="register.custom.compilers" description="Compile module MyFirstProject; production classes">
+    <mkdir dir="${myfirstproject.output.dir}"/>
+    <javac2 destdir="${myfirstproject.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.myfirstproject}/javac">
+      <compilerarg line="${compiler.args.myfirstproject}"/>
+      <bootclasspath refid="myfirstproject.module.bootclasspath"/>
+      <classpath refid="myfirstproject.module.production.classpath"/>
+      <src refid="myfirstproject.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.myfirstproject"/>
+    </javac2>
+    
+    <copy todir="${myfirstproject.output.dir}">
+      <fileset dir="${module.myfirstproject.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.myfirstproject.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.myfirstproject.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.myfirstproject.tests" depends="register.custom.compilers,compile.module.myfirstproject.production" description="compile module MyFirstProject; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.myfirstproject" description="cleanup module">
+    <delete dir="${myfirstproject.output.dir}"/>
+    <delete dir="${myfirstproject.testoutput.dir}"/>
+  </target>
+</project>

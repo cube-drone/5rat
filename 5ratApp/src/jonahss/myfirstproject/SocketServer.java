@@ -72,8 +72,11 @@ class SocketServer {
       // (char) -1 is not equal to -1.
       // ready is checked to ensure the read call doesn't block.
       while ((a = in.read()) != -1 && in.ready()) {
-        input.append((char) a);
+        Log.d("read", Character.toString((char)a));
+        input.append( (char)a );
       }
+      input.append( (char)a );
+
       String inputString = input.toString();
       Log.d("serverThread", "Got data from client: " + inputString);
       try {

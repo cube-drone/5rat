@@ -19,9 +19,9 @@ public class Funtime extends Activity {
 
         //new AsyncTaskEx().execute();
 
-        //mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nut2fair);
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nut2fair);
 
-        mediaPlayer = new MediaPlayer();
+        //mediaPlayer = new MediaPlayer();
 
         commandExecutor = new CommandExecutor(getApplicationContext(), mediaPlayer);
         runServer(commandExecutor);

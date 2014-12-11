@@ -1,0 +1,6 @@
+out
+/out
+out/
+out/*
+/TestModule
+.idea

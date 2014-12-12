@@ -1,4 +1,6 @@
 
+To install, you need a python-midi package, adb-foreach, a bunch
+of Android development dependencies... good luck, is what I'm sayin'
 
 * We've been playing Dance of the Sugar Plum faeries non stop
   for 2 god-damn days. 

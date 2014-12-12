@@ -2,73 +2,86 @@ package jonahss.myfirstproject;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.io.File;
 
 public class Funtime extends Activity {
 
-    private MediaPlayer mediaPlayer;
-    private CommandExecutor commandExecutor;
+  private MediaPlayer mediaPlayer;
+  private CommandExecutor commandExecutor;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_funtime);
+  private static final String TAG = "AudioFxDemo";
 
-        //new AsyncTaskEx().execute();
-        File sdDir = Environment.getExternalStorageDirectory();
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(sdDir, "5rat.mid")));
-
-        //mediaPlayer = new MediaPlayer();
-
-        commandExecutor = new CommandExecutor(getApplicationContext(), mediaPlayer);
-        runServer(commandExecutor);
+  private static final float VISUALIZER_HEIGHT_DIP = 50f;
 
 
-   //try {
-//          commandExecutor.execute(new Command("{\"action\":\"playSong\", \"cmd\":\"action\"}"));
-//        } catch (JSONException e) {
-//          e.printStackTrace();
-//        } catch (CommandTypeException e) {
-//          e.printStackTrace();
-// }
+  private Visualizer mVisualizer;
 
-//        try {
-//          commandExecutor.execute(new Command("{\"action\":\"prepare\", \"cmd\":\"action\"}"));
-//        } catch (JSONException e) {
-//          e.printStackTrace();
-//        } catch (CommandTypeException e) {
-//          e.printStackTrace();
-//        }
+  private LinearLayout mLinearLayout;
+  private VisualizerView mVisualizerView;
 
-//        try {
-//          Thread.sleep(10000000);
-//        } catch (InterruptedException e) {
-//          e.printStackTrace();
-//        }
-//
-//        try {
-//            commandExecutor.execute(new Command("{\"action\":\"start\", \"cmd\":\"action\"}"));
-//          } catch (JSONException e) {
-//            e.printStackTrace();
-//          } catch (CommandTypeException e) {
-//            e.printStackTrace();
-//          }
 
-    }
 
-    public void runServer(CommandExecutor commandExecutor) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
 
-      Thread serverThread = new Thread(new ServerThread(commandExecutor));
-      serverThread.start();
+      mLinearLayout = new LinearLayout(this);
+      mLinearLayout.setOrientation(LinearLayout.VERTICAL);
 
-    }
+      setContentView(mLinearLayout);
+
+      File sdDir = Environment.getExternalStorageDirectory();
+      mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(sdDir, "5rat.mid")));
+
+      //mediaPlayer = new MediaPlayer();
+
+      commandExecutor = new CommandExecutor(getApplicationContext(), mediaPlayer);
+      runServer(commandExecutor);
+
+      setupVisualizerFxAndUI();
+      mVisualizer.setEnabled(true);
+  }
+
+  public void runServer(CommandExecutor commandExecutor) {
+
+    Thread serverThread = new Thread(new ServerThread(commandExecutor));
+    serverThread.start();
+
+  }
+
+  private void setupVisualizerFxAndUI() {
+    // Create a VisualizerView (defined below), which will render the simplified audio
+    // wave form to a Canvas.
+    mVisualizerView = new VisualizerView(this);
+    mVisualizerView.setLayoutParams(new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.FILL_PARENT,
+            (int)(VISUALIZER_HEIGHT_DIP * getResources().getDisplayMetrics().density)));
+    mLinearLayout.addView(mVisualizerView);
+
+    // Create the Visualizer object and attach it to our media player.
+    mVisualizer = new Visualizer(0);
+    mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+    mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+      public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
+                                        int samplingRate) {
+        mVisualizerView.updateVisualizer(bytes);
+        Log.d("visualizer", "visualizing");
+      }
+
+      public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {}
+    }, Visualizer.getMaxCaptureRate() / 2, true, false);
+  }
+
 
   class ServerThread implements Runnable {
 

@@ -110,10 +110,13 @@ def asplode(filename):
     directory_name = filename[:-4]+"_split"
     create_directory(directory_name)
 
+    first_track_group = track_split[0]
     for counter, track_group in enumerate(track_split):
         new_filename = os.path.join( directory_name, str(counter)+".mid" ) 
         print new_filename, "------"
         print_tracks(track_group)
+        if len(track_group) == 0:
+            track_group = first_track_group
         save_tracks(original_filename, new_filename, track_group)
         devices[counter].push_file(new_filename, "/mnt/sdcard/5rat.mid")        
 

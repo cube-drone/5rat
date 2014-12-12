@@ -9,12 +9,19 @@ var startSock = function(port, len) {
   	sockets.push(socket);
   	socket._port = port;
     socket.setEncoding('utf8');
+    promised++;
     console.log("Connected on " + port);
-    if (++promised == len == sockets.length) {
+    if (promised == len) {
     	for(var i = 0; i < sockets.length; i++) {
     		console.log("Sending " + template);
 			sockets[i].write(template);
 		}
+    }
+    else{
+        console.log("this happened");
+        console.log(promised);
+        console.log(len);
+        console.log(sockets.length);
     }
   });
 

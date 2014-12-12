@@ -13,7 +13,7 @@ var startSock = function(port, len) {
     console.log("Connected on " + port);
     if (promised == len) {
     	for(var i = 0; i < sockets.length; i++) {
-    		console.log("Sending " + template);
+    		//console.log("Sending " + template);
 			sockets[i].write(template);
 		}
     }

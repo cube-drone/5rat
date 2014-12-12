@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 
@@ -21,8 +22,8 @@ public class Funtime extends Activity {
         setContentView(R.layout.activity_funtime);
 
         //new AsyncTaskEx().execute();
-
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File("/sdcard/5rat.mid")));
+        File sdDir = Environment.getExternalStorageDirectory();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(sdDir, "5rat.mid")));
 
         //mediaPlayer = new MediaPlayer();
 

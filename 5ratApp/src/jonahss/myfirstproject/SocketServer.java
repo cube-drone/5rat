@@ -79,18 +79,10 @@ class SocketServer {
 
       String inputString = input.toString();
       Log.d("serverThread", "Got data from client: " + inputString);
-      try {
-        Command cmd = getCommand(inputString);
-        Log.d("serverThread", "Got command of type " + cmd.commandType().toString());
-        res = runCommand(cmd);
-        Log.d("serverThread", "Returning result: " + res);
-      } catch (final CommandTypeException e) {
-        res = new CommandResult(WDStatus.UNKNOWN_ERROR, e.getMessage())
-                .toString();
-      } catch (final JSONException e) {
-        res = new CommandResult(WDStatus.UNKNOWN_ERROR,
-                "Error running and parsing command").toString();
-      }
+      Command cmd = new Command("playSong");
+      Log.d("serverThread", "Got command of type " + cmd.commandType().toString());
+      res = runCommand(cmd);
+      Log.d("serverThread", "Returning result: " + res);
       out.write(res);
       out.flush();
     } catch (final IOException e) {

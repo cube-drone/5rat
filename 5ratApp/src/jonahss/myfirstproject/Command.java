@@ -15,10 +15,9 @@ public class Command {
   JSONObject json;
   CommandType cmdType;
 
-  public Command(final String jsonStr) throws JSONException,
-          CommandTypeException {
-    json = new JSONObject(jsonStr);
-    setType(json.getString("cmd"));
+  public Command(String action) {
+    this.cmdType = CommandType.ACTION;
+
   }
 
   /**
@@ -29,7 +28,7 @@ public class Command {
    */
   public String action() throws JSONException {
 
-    return json.getString("action");
+    return "playSong";
   }
 
   public CommandType commandType() {

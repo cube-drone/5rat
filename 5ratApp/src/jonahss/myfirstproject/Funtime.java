@@ -21,7 +21,7 @@ public class Funtime extends Activity {
 
   private static final String TAG = "AudioFxDemo";
 
-  private static final float VISUALIZER_HEIGHT_DIP = 50f;
+  private static final float VISUALIZER_HEIGHT_DIP = 500f;
 
 
   private Visualizer mVisualizer;
@@ -36,7 +36,7 @@ public class Funtime extends Activity {
       super.onCreate(savedInstanceState);
 
       mLinearLayout = new LinearLayout(this);
-      mLinearLayout.setOrientation(LinearLayout.VERTICAL);
+      mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
       setContentView(mLinearLayout);
 
@@ -75,7 +75,6 @@ public class Funtime extends Activity {
       public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
                                         int samplingRate) {
         mVisualizerView.updateVisualizer(bytes);
-        Log.d("visualizer", "visualizing");
       }
 
       public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {}

@@ -9,7 +9,6 @@ import android.view.View;
 
 /**
  * A simple class that draws waveform data received from a
- * {@link Visualizer.OnDataCaptureListener#onWaveFormDataCapture }
  */
 class VisualizerView extends View {
   private byte[] mBytes;

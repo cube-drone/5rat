@@ -22,7 +22,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="07734"
         android:theme="@style/AppTheme" >
         <activity
             android:name="jonahss.myfirstproject.Funtime"

@@ -1,0 +1,25 @@
+{
+  "name": "5rat",
+  "version": "1.0.0",
+  "description": "To install, you need a python-midi package, adb-foreach, a bunch of Android development dependencies... good luck, is what I'm sayin'",
+  "main": "controller.js",
+  "dependencies": {
+    "adb-foreach": "^1.0.1",
+    "appium-adb": "^1.6.0",
+    "node-ios-device": "^0.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/classam/5rat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/classam/5rat/issues"
+  },
+  "homepage": "https://github.com/classam/5rat"
+}

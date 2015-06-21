@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class Funtime extends Activity {
 
@@ -34,6 +35,8 @@ public class Funtime extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      getActionBar().setTitle("'Appy Holidays");
 
       mLinearLayout = new LinearLayout(this);
       mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -69,11 +72,12 @@ public class Funtime extends Activity {
     mLinearLayout.addView(mVisualizerView);
 
     // Create the Visualizer object and attach it to our media player.
-    mVisualizer = new Visualizer(0);
+    mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
     mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
     mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
       public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
                                         int samplingRate) {
+        Log.d("captureListener", Arrays.toString(bytes));
         mVisualizerView.updateVisualizer(bytes);
       }
 

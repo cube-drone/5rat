@@ -14,8 +14,8 @@ var startSock = function(port, len) {
     if (promised == len) {
     	for(var i = 0; i < sockets.length; i++) {
     		//console.log("Sending " + template);
-			sockets[i].write(template);
-		}
+			  sockets[i].write(template);
+		  }
     }
     else{
         console.log("this happened");

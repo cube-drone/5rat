@@ -1,6 +1,7 @@
 package jonahss.myfirstproject;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
@@ -42,6 +43,7 @@ public class Funtime extends Activity {
 
       mLinearLayout = new LinearLayout(this);
       mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+      mLinearLayout.setBackgroundColor(Color.rgb(245, 112, 250));
 
       setContentView(mLinearLayout);
 

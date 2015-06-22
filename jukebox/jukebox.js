@@ -4,7 +4,11 @@ let SubProcess = require('teen_process').SubProcess
 let fs = require('fs-promise')
 let Midifile = require('midifile')
 let path = require('path')
+let TwitterStream = require('./twitter.js')
+let B = require('bluebird')
 
+
+let now_playing = B.resolve(true)
 
 let file = "midi_files/african0.mid"
 
@@ -34,7 +38,7 @@ function checkMidiFile (path) {
 
 function playSong (path) {
   return new Promise(function (resolve, reject) {
-    let proc = new SubProcess('./rat_parade', [file]);
+    let proc = new SubProcess('./rat_parade', [path]);
 
     // handle log output
     proc.on('output', function (stdout, stderr) {
@@ -59,4 +63,13 @@ function playSong (path) {
 
 }
 
-checkMidiFile(file).then(playSong, console.log)
+let twitterEvents = new TwitterStream();
+
+twitterEvents.on('new song', function (file) {
+  now_playing = now_playing.finally(function () {
+    console.log('we got a new song')
+    return checkMidiFile(file).then(playSong, console.log)
+  })
+})
+
+twitterEvents.init()

@@ -1,12 +1,16 @@
+'use strict'
+
+let path = require('path');
+
 function TwitterStream () {
-  
+
   var self = this;
   this.init = function () {
     client.stream('statuses/filter', {track: 'appiumjukebox'}, function (stream) {
       stream.on('data', function(tweet) {
         console.log(tweet);
         var url = tweet.text.match(urlRegEx)[0];
-        var fileName = tweet.user.screen_name + '___' + songNo + '.jpg';
+        var fileName = path.resolve('./midi_files', `${tweet.user.screen_name}___${songNo}.mid`);
         var ws = fs.createWriteStream(fileName);
         if (url) {
           var httpGet = http.get(url, function(res) {
@@ -24,7 +28,7 @@ function TwitterStream () {
     });
   };
 
-  
+
   var auth = require('./twitter_auth.json');
 
   var Twitter = require('twitter');
@@ -47,5 +51,4 @@ var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 util.inherits(TwitterStream, EventEmitter);
 
-var tweeet = new TwitterStream();
-tweeet.init();
+module.exports = TwitterStream;

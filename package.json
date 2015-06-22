@@ -6,9 +6,12 @@
   "dependencies": {
     "adb-foreach": "^1.0.1",
     "appium-adb": "^1.6.0",
+    "bluebird": "^2.9.30",
+    "follow-redirects": "0.0.3",
     "fs-promise": "^0.3.1",
     "node-ios-device": "^0.4.1",
-    "teen_process": "^1.2.2"
+    "teen_process": "^1.2.2",
+    "twitter": "^1.2.5"
   },
   "devDependencies": {},
   "scripts": {

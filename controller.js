@@ -26,7 +26,7 @@ var startSock = function(port, len) {
   });
 
   socket.on('error', function (err) {
-    console.dir(err);
+    console.dir('socket err', err);
   });
 
   socket.on('close', function () {

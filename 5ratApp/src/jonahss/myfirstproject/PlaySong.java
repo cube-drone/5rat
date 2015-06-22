@@ -15,6 +15,7 @@ public class PlaySong extends CommandHandler {
   @Override
   public CommandResult execute(Command command) throws JSONException {
     mediaPlayer.start();
+
     return new CommandResult(WDStatus.SUCCESS);
   }
 }

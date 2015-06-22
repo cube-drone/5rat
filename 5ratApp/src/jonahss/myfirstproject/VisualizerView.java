@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -33,7 +32,6 @@ class VisualizerView extends View {
 
   public void updateVisualizer(byte[] bytes) {
     mBytes = bytes;
-    Log.d("updateVisualizer", Integer.toString(bytes.length));
     invalidate();
   }
 
@@ -41,13 +39,11 @@ class VisualizerView extends View {
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
 
-    Log.d("canvas ondraw", Boolean.toString(mBytes == null));
 
     if (mBytes == null) {
       return;
     }
 
-    Log.d("canvas ondraw", Integer.toString(mBytes.length));
 
     if (mPoints == null || mPoints.length < mBytes.length * 4) {
       mPoints = new float[mBytes.length * 4];
@@ -64,7 +60,6 @@ class VisualizerView extends View {
               + ((byte) (mBytes[i + 1] + 128)) * (mRect.height() / 2) / 128;
     }
 
-    Log.d("canvas ondraw", Float.toString(mBytes[0]));
     canvas.drawLines(mPoints, mForePaint);
   }
 }

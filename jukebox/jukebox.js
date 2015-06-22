@@ -1,22 +1,25 @@
 'use strict'
 
-let exec = require('teen_process').exec
-let midiplayer = require('midiplayer')
-let midifile = require('midifile')
+let SubProcess = require('teen_process').SubProcess
 let fs = require('fs-promise')
 
 
-let file = "../midi_files/SMWOverworld.mid"
+let file = "midi_files/african0.mid"
 
-let player = new midiplayer()
-//exec('../rat_parade')
+this.proc = new SubProcess('./rat_parade', [file]);
 
-fs.readFile(file).then(function (buf) {
-  let file = new midifile(buf)
-
-  player.load(file);
-
-  player.play(function () {
-    console.log('finished playing song yo');
-  })
+// handle log output
+this.proc.on('output', function (stdout, stderr) {
+  if (stdout) {
+    console.log(`[STDOUT] ${stdout.trim()}`);
+  }
+  if (stderr) {
+    console.log(`[STDERR] ${stderr.trim()}`);
+  }
 });
+
+let startDetector = function () {
+  
+}
+
+this.proc.start(startDetector);

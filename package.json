@@ -6,6 +6,7 @@
   "dependencies": {
     "adb-foreach": "^1.0.1",
     "appium-adb": "^1.6.0",
+    "fs-promise": "^0.3.1",
     "node-ios-device": "^0.4.1",
     "teen_process": "^1.2.2"
   },

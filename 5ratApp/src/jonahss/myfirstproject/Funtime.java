@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.io.File;
-import java.util.Arrays;
+import java.io.IOException;
 
 public class Funtime extends Activity {
 
@@ -24,19 +24,21 @@ public class Funtime extends Activity {
 
   private static final float VISUALIZER_HEIGHT_DIP = 500f;
 
-
   private Visualizer mVisualizer;
 
   private LinearLayout mLinearLayout;
   private VisualizerView mVisualizerView;
 
+  private Thread serverThread;
 
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      getActionBar().setTitle("'Appy Holidays");
+      final Funtime self = this;
+
+      getActionBar().setTitle("Yay jQuerySF");
 
       mLinearLayout = new LinearLayout(this);
       mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -46,18 +48,26 @@ public class Funtime extends Activity {
       File sdDir = Environment.getExternalStorageDirectory();
       mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(sdDir, "5rat.mid")));
 
-      //mediaPlayer = new MediaPlayer();
+//      mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//
+//        @Override
+//        public void onCompletion(MediaPlayer mp) {
+//
+//          self.finish();
+//        }
+//
+//      });
 
       commandExecutor = new CommandExecutor(getApplicationContext(), mediaPlayer);
-      runServer(commandExecutor);
+      runServer(commandExecutor, mediaPlayer);
 
       setupVisualizerFxAndUI();
       mVisualizer.setEnabled(true);
   }
 
-  public void runServer(CommandExecutor commandExecutor) {
+  public void runServer(CommandExecutor commandExecutor, MediaPlayer mediaPlayer) {
 
-    Thread serverThread = new Thread(new ServerThread(commandExecutor));
+    this.serverThread = new Thread(new ServerThread(commandExecutor, mediaPlayer));
     serverThread.start();
 
   }
@@ -77,7 +87,6 @@ public class Funtime extends Activity {
     mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
       public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
                                         int samplingRate) {
-        Log.d("captureListener", Arrays.toString(bytes));
         mVisualizerView.updateVisualizer(bytes);
       }
 
@@ -90,7 +99,7 @@ public class Funtime extends Activity {
 
     private CommandExecutor executor;
 
-    public ServerThread(CommandExecutor executor) {
+    public ServerThread(CommandExecutor executor, MediaPlayer mediaPlayer) {
       this.executor = executor;
     }
 
@@ -98,15 +107,18 @@ public class Funtime extends Activity {
 
       Log.d("serverThread", "starting socket server");
 
-      SocketServer server;
+      final SocketServer server;
+
       try {
-        server = new SocketServer(4724, executor);
+        server = new SocketServer(4724, executor, mediaPlayer);
         server.listenForever();
+        server.close();
       } catch (final SocketServerException e) {
         Logger.error(e.getError());
         System.exit(1);
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-
     }
 
   }

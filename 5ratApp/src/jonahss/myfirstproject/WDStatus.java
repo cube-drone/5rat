@@ -8,6 +8,7 @@ package jonahss.myfirstproject;
  */
 public enum WDStatus {
   SUCCESS (0, "The command executed successfully."),
+  WAIT (1, "fake command, just wait for an async response"),
   NO_SUCH_DRIVER (6, "A session is either terminated or not started"),
   NO_SUCH_ELEMENT (7, "An element could not be located on the page using the given search parameters."),
   NO_SUCH_FRAME (8, "A request to switch to a frame could not be satisfied because the frame could not be found."),

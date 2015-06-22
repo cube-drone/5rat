@@ -1,6 +1,7 @@
 package jonahss.myfirstproject;
 
 
+import android.media.MediaPlayer;
 import android.util.Log;
 import org.json.JSONException;
 
@@ -20,9 +21,10 @@ class SocketServer {
   Socket         client;
   BufferedReader in;
   BufferedWriter out;
-  boolean        keepListening;
+  volatile boolean        keepListening;
   private final Timer       timer    = new Timer("WatchTimer");
   private final CommandExecutor executor;
+  private MediaPlayer mediaPlayer;
 
   /**
    * Constructor
@@ -30,7 +32,7 @@ class SocketServer {
    * @param port
    * @throws SocketServerException
    */
-  public SocketServer(final int port, final CommandExecutor commandExecutor) throws SocketServerException {
+  public SocketServer(final int port, final CommandExecutor commandExecutor, MediaPlayer mediaPlayer) throws SocketServerException {
     keepListening = true;
     executor = commandExecutor;
     try {
@@ -40,6 +42,24 @@ class SocketServer {
       throw new SocketServerException(
               "Could not start socket server listening on " + port);
     }
+
+    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+      @Override
+      public void onCompletion(MediaPlayer mp) {
+        try {
+          out.write("song completed");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        try {
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+    });
 
   }
 
@@ -115,6 +135,12 @@ class SocketServer {
     } catch (final IOException e) {
       throw new SocketServerException("Error when client was trying to connect");
     }
+  }
+
+  public void close() throws IOException {
+    Log.d("serverThread", "closing socket");
+
+    server.close();
   }
 
   /**

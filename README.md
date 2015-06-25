@@ -1,3 +1,4 @@
+![appiumJukebox](appiumJukebox.gif)
 
 To install, you need a python-midi package, adb-foreach, a bunch
 of Android development dependencies... good luck, is what I'm sayin'
@@ -27,7 +28,7 @@ of Android development dependencies... good luck, is what I'm sayin'
   * And, to be serious, I need some practice getting a lot of
     devices to do things.
 
-* what did we do? 
+* what did we do?
 
 * Jonah wrote the client, in Java, that runs on each of the devices. It
   loads up a midi file and waits until it gets a message to trigger it.

@@ -50,16 +50,6 @@ public class Funtime extends Activity {
       File sdDir = Environment.getExternalStorageDirectory();
       mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(sdDir, "5rat.mid")));
 
-//      mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//
-//        @Override
-//        public void onCompletion(MediaPlayer mp) {
-//
-//          self.finish();
-//        }
-//
-//      });
-
       commandExecutor = new CommandExecutor(getApplicationContext(), mediaPlayer);
       runServer(commandExecutor, mediaPlayer);
 
